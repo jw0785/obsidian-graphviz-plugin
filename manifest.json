@@ -1,7 +1,7 @@
 {
 	"id": "graphviz-plugin",
 	"name": "Graphviz Plugin",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"minAppVersion": "1.0.0",
 	"description": "Add graphviz support",
 	"author": "jw0785",
