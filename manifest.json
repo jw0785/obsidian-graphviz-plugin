@@ -1,7 +1,7 @@
 {
 	"id": "graphviz",
 	"name": "Graphviz View",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"minAppVersion": "1.0.0",
 	"description": "Add graphviz support",
 	"author": "jw0785",
