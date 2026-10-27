@@ -92,18 +92,38 @@ export default class GraphvizPlugin extends Plugin {
 	}
 
 	private injectSvg(el: HTMLElement, svg: string) {
-		const container = el.createDiv({ cls: 'graphviz-container graphviz-fit' });
-		const img = container.createEl('img', { cls: 'graphviz-svg' });
+		const container = el.createDiv({ cls: 'graphviz-container' });
+		const scroll = container.createDiv({ cls: 'graphviz-scroll' });
+		const img = scroll.createEl('img', { cls: 'graphviz-svg' });
 		img.src = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
 
-		const btn = container.createEl('button', { cls: 'graphviz-toggle' });
-		setIcon(btn, 'maximize-2');
-		btn.addEventListener('click', () => {
-			const isFit = container.hasClass('graphviz-fit');
-			container.toggleClass('graphviz-fit', !isFit);
-			container.toggleClass('graphviz-overflow', isFit);
-			setIcon(btn, isFit ? 'minimize-2' : 'maximize-2');
-		});
+		const controls = container.createDiv({ cls: 'graphviz-controls' });
+		const toggleBtn = controls.createEl('button');
+		const zoomInBtn = controls.createEl('button');
+		const zoomOutBtn = controls.createEl('button');
+		setIcon(zoomInBtn, 'zoom-in');
+		setIcon(zoomOutBtn, 'zoom-out');
+
+		let mode: 'fit' | 'full' | 'scaled' = 'fit';
+		const apply = (next: typeof mode) => {
+			mode = next;
+			container.toggleClass('graphviz-fit', mode === 'fit');
+			container.toggleClass('graphviz-full', mode === 'full');
+			container.toggleClass('graphviz-scaled', mode === 'scaled');
+			setIcon(toggleBtn, mode === 'fit' ? 'maximize-2' : 'minimize-2');
+		};
+		apply('fit');
+
+		// fit → full, full → fit, scaled → fit
+		toggleBtn.addEventListener('click', () => apply(mode === 'fit' ? 'full' : 'fit'));
+
+		// Scale from the currently rendered width so zoom continues from what's on screen
+		const zoom = (factor: number) => {
+			container.setCssProps({ '--graphviz-width': `${img.clientWidth * factor}px` });
+			apply('scaled');
+		};
+		zoomInBtn.addEventListener('click', () => zoom(1.25));
+		zoomOutBtn.addEventListener('click', () => zoom(0.8));
 	}
 
 	private renderDot(source: string): Promise<string> {

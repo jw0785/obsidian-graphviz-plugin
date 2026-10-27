@@ -1,6 +1,9 @@
 .graphviz-container {
 	position: relative;
 	max-width: 100%;
+}
+
+.graphviz-scroll {
 	overflow-x: auto;
 }
 
@@ -9,18 +12,34 @@
 	height: auto;
 }
 
-.graphviz-container.graphviz-overflow .graphviz-svg {
+.graphviz-container.graphviz-full .graphviz-svg {
 	max-width: none;
 }
 
-.graphviz-toggle {
+.graphviz-container.graphviz-scaled .graphviz-svg {
+	max-width: none;
+	width: var(--graphviz-width);
+	height: auto;
+}
+
+.graphviz-controls {
 	position: absolute;
 	top: 34px;
 	right: 4px;
-	width: 30px;
-	cursor: pointer;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
 	opacity: 0;
 	transition: opacity 0.15s;
+}
+
+.graphviz-container:hover .graphviz-controls {
+	opacity: 1;
+}
+
+.graphviz-controls button {
+	width: 30px;
+	cursor: pointer;
 	padding: 2px 6px;
 	border-radius: 4px;
 	display: flex;
@@ -29,8 +48,4 @@
 	background: var(--background-secondary);
 	color: var(--text-muted);
 	border: 1px solid var(--background-modifier-border);
-}
-
-.graphviz-container:hover .graphviz-toggle {
-	opacity: 1;
 }
